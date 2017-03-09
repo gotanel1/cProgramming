@@ -1,1 +1,12 @@
+#include <iostream>
 
+using namespace std;
+
+main(void){
+	
+	cout << "Min : "<< INT_MIN;
+	cout << "Max : "<< INT_MAX;
+	//cout << "check int : " << sizeof(int);
+	
+	return 0;
+}
