@@ -1,0 +1,34 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int main(){
+	char* p;
+	string s ="Hello world";
+	char c[] ={'H','E','L','L','O',' ','W','O','R','L','D'};
+	bool found = false;
+	//byte bb;
+	
+	bb = (byte)c[0];
+	cout << bb << endl;
+	
+	char key = ' ';
+	vector<char> v(c,c+11);
+	sort (v.begin(),v.end());
+	//key = 'L';
+	found = binary_search(v.begin(),v.end(), key);
+	if(found){
+		cout << "Found "<< key ;
+	}else {
+		cout << "Not Found " << key ;
+	}
+	
+/*
+	p = &s[s.size()-1];
+	for(int i=0;i<=s.size();i++){
+	cout << *(p--);
+	}*/
+	return 0;
+}
