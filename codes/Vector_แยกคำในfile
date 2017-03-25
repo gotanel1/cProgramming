@@ -1,0 +1,66 @@
+//Vector2
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <string>
+#include <cstring>
+
+using namespace std;
+
+void split( const string &s,const char* delim,
+			vector<string> & vecStr,
+			vector<int> &vecCnt
+		/*	,vector<string> & vecWord*/){
+		
+	char* newS = new char[s.size()];
+	newS = strdup(s.c_str());
+	char* token= strtok(newS,delim);
+	
+	while(token != NULL){
+		int found=0;
+		string t = string(token);
+		for(int  i=0;i<vecStr.size();i++){
+			if(t==vecStr[i]){
+				vecCnt[i] = vecCnt[i]+1;
+				found =1;
+				break ;
+			}
+		}
+		if((found == 0)||vecStr.size()==0){
+			vecStr.push_back(string(token));
+			vecCnt.push_back(1);
+		}
+		token = strtok(NULL,delim);
+	}
+	
+	/*while(token != NULL){
+		
+		vecStr.push_back(string(token));
+		vecCnt.push_back(1);
+		token = strtok(NULL,delim);
+	}
+	
+	*/	
+	delete newS;
+}
+int main(int argc, char** argv) {
+	string fileName;
+	cout << "Filename ? >> ";
+	cin >> fileName;
+	ifstream myFile(fileName.c_str());
+	if(myFile.is_open()){
+		string s;
+		vector <string>words;
+		vector <int>words_cnt;	//vector <int>words_cnt;
+		vector <string>word;	//vector <string>words;
+		while (getline(myFile,s)){split(s," .:,?",words,words_cnt/*word*/);
+		}
+		
+		myFile.close();
+		cout<<"Number of words = "<< words.size() <<endl;
+		for(int idx=0;idx<(int)words.size();idx++){
+			cout << words[idx]<<"(" <<words_cnt[idx]<<")\t";
+		}
+	}
+	return 0;
+}
