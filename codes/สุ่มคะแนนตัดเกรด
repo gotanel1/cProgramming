@@ -1,0 +1,138 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define ID 0
+#define MID 1
+#define FIN 2
+#define TOTAL 3
+#define GRADE 4
+#define NUM_STUDENT 20
+float student[NUM_STUDENT][5];
+float max_mid=0.0;
+float max_final=0.0;
+
+void grading(int i)
+{
+	float s = student[i][TOTAL];
+	if (s >= 80) student[i][GRADE] = 4.0f;
+	else if (s >= 75) student[i][GRADE] = 3.5f;
+	else if (s >= 70) student[i][GRADE] = 3.0f;
+	else if (s >= 65) student[i][GRADE] = 2.5f;
+	else if (s >= 60) student[i][GRADE] = 2.0f;
+	else if (s >= 55) student[i][GRADE] = 1.5f;
+	else if (s >= 50) student[i][GRADE] = 1.0f;
+	else student[i][GRADE] = 0.0f;
+}
+
+void process(int i)
+{
+	student[i][ID] = i;
+	student[i][MID] = (rand()%5001)/100.0;
+	student[i][FIN] = (rand()%5001)/100.0;
+	student[i][TOTAL] = student[i][MID]+student[i][FIN];
+	grading(i);
+	if (i == 0) {
+		max_mid = student[i][MID];
+		max_final = student[i][FIN];
+	} else {
+		if (max_mid < student[i][MID]) {
+			max_mid = student[i][MID];
+		}
+		if (max_final < student[i][FIN]) {
+			max_final = student[i][FIN];
+		}
+	}
+}
+
+void line()
+{
+	printf("+------+-------------+-------+-------+--------+-------+\n");
+}
+void header()
+{
+	line();
+	printf("| Pos. | Student No. | Mid.  | Final |  Total | Grade |\n");
+	line();
+}
+
+void show(int i)
+{
+	printf("|     %2d      | %5.2f | %5.2f | %6.2f |   ", 
+		(int)student[i][ID], 
+		student[i][MID], student[i][FIN], student[i][TOTAL]);
+	switch ((int)(10.0*student[i][GRADE])) {
+	case 40: printf("A "); break;
+	case 35: printf("B+"); break;
+	case 30: printf("B "); break;
+	case 25: printf("C+"); break;
+	case 20: printf("C "); break;
+	case 15: printf("D+"); break;
+	case 10: printf("D "); break;
+	default: printf("E "); break;
+	}
+	printf("  |\n");
+}
+
+void sorting()
+{
+	for (int i=0; i<NUM_STUDENT-1; i++) {
+		for (int j=i+1; j<NUM_STUDENT; j++) {
+			if (student[i][GRADE]<student[j][GRADE]) {
+				// swap
+				float id, mid, fin, total, grade;
+				// S = D0
+				id = student[i][ID];
+				mid = student[i][MID];
+				fin = student[i][FIN];
+				total = student[i][TOTAL];
+				grade = student[i][GRADE];
+				// D0 = D1
+				student[i][ID] = student[j][ID];
+				student[i][MID] = student[j][MID];
+				student[i][FIN] = student[j][FIN];
+				student[i][TOTAL] = student[j][TOTAL];
+				student[i][GRADE] = student[j][GRADE];
+				// D1 = S
+				student[j][ID] = id;
+				student[j][MID] = mid;
+				student[j][FIN] = fin;
+				student[j][TOTAL] = total;
+				student[j][GRADE] = grade;
+			}
+		}
+	}
+}
+
+int main()
+{
+	srand(time(NULL));
+	float r = (rand() % 5001) / 100.0; // 0.00 ..50.00
+	for (int i=0; i<NUM_STUDENT; i++) {
+		process(i);
+	}
+	
+	sorting();
+	
+	header();
+	int pos=1;
+	int cnt=1;
+	float old_grade;
+	for (int i=0; i<NUM_STUDENT; i++) {
+		if (i==0) {
+			old_grade = student[i][GRADE];
+		} else {
+			if (student[i][GRADE] == old_grade) {
+				cnt++;
+			} else {
+				pos = pos+cnt;
+				cnt = 1;
+				old_grade = student[i][GRADE];
+			}
+		}
+		printf("|  %2d  ", pos);
+		show(i);
+	}
+	line();
+	printf("\t Max mid/final = %.2f/%.2f\n", max_mid, max_final);
+	return 0;
+}
